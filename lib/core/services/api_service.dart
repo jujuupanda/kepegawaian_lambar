@@ -1,18 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:dartz/dartz.dart';
-
-import '../error/failure.dart';
-import '../services/database_service.dart';
-import 'package:http/http.dart' as http;
+part of 'services.dart';
 
 class _Header {
   static Map<String, String> get(String token) {
     return {
       "Accept": "application/json",
-      // "Authorization": "Bearer $token", isi dengan token jika diperlukan
+      "Authorization": "Bearer $token",
     };
   }
 
@@ -48,8 +40,12 @@ class _Header {
   }
 }
 
-class ApiHelper {
-  static final _urlAPI = DatabaseService().db;
+class _TokenChecker {
+  verify(String token) {}
+}
+
+class ApiService {
+  static const _baseUrl = "https://reqres.in/";
 
   ///General method for http request
   static Future<Either<Failure, Map<String, dynamic>>> requestHandler(
@@ -85,7 +81,7 @@ class ApiHelper {
     String endpoint,
     String token,
   ) {
-    final url = Uri.parse("$_urlAPI$endpoint");
+    final url = Uri.parse("$_baseUrl$endpoint");
     return requestHandler(
       () => http.get(
         url,
@@ -100,7 +96,7 @@ class ApiHelper {
     String token,
     Map<String, dynamic> data,
   ) {
-    final url = Uri.parse("$_urlAPI$endpoint");
+    final url = Uri.parse("$_baseUrl$endpoint");
     return requestHandler(
       () => http.post(
         url,
@@ -110,15 +106,15 @@ class ApiHelper {
     );
   }
 
-  ///POST Request
-  static Future<Either<Failure, Map<String, dynamic>>> updateRequest(
+  ///PATCH Request
+  static Future<Either<Failure, Map<String, dynamic>>> patchRequest(
     String endpoint,
     String token,
     Map<String, dynamic> data,
   ) {
-    final url = Uri.parse("$_urlAPI$endpoint");
+    final url = Uri.parse("$_baseUrl$endpoint");
     return requestHandler(
-      () => http.post(
+      () => http.patch(
         url,
         headers: _Header.update(token),
         body: jsonEncode(data),
@@ -126,15 +122,31 @@ class ApiHelper {
     );
   }
 
-  ///POST Request
+  ///PUT Request
+  static Future<Either<Failure, Map<String, dynamic>>> putRequest(
+    String endpoint,
+    String token,
+    Map<String, dynamic> data,
+  ) {
+    final url = Uri.parse("$_baseUrl$endpoint");
+    return requestHandler(
+      () => http.put(
+        url,
+        headers: _Header.update(token),
+        body: jsonEncode(data),
+      ),
+    );
+  }
+
+  ///DELETE Request
   static Future<Either<Failure, Map<String, dynamic>>> deleteRequest(
     String endpoint,
     String token,
     Map<String, dynamic> data,
   ) {
-    final url = Uri.parse("$_urlAPI$endpoint");
+    final url = Uri.parse("$_baseUrl$endpoint");
     return requestHandler(
-      () => http.post(
+      () => http.delete(
         url,
         headers: _Header.delete(token),
         body: jsonEncode(data),
@@ -147,7 +159,7 @@ class ApiHelper {
     String endpoint,
     Map<String, dynamic> data,
   ) {
-    final url = Uri.parse("$_urlAPI$endpoint");
+    final url = Uri.parse("$_baseUrl$endpoint");
     return requestHandler(
       () => http.post(
         url,

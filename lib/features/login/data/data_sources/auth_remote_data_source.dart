@@ -8,7 +8,7 @@ class AuthRemoteDataSource extends AuthDataSource {
       "email": params.username,
       "password": params.password,
     };
-    final result = await ApiHelper.loginRequest(endpoint, data);
+    final result = await ApiService.loginRequest(endpoint, data);
     return result.fold(
       (failure) => Left(failure),
       (success) => Right(AuthModel.fromJson(success)),

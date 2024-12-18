@@ -39,6 +39,7 @@ dependencies:
   crypto: ^3.0.6
   cached_network_image: ^3.4.1
   gap: ^3.0.1
+  dart_jsonwebtoken: ^2.14.2
 
 dev_dependencies:
   flutter_test:
