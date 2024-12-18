@@ -1,3 +1,3 @@
 class DatabaseService {
-  final db = "https://reqres.in";
+  final db = "https://reqres.in/";
 }
